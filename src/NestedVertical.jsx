@@ -24,29 +24,8 @@ const dotsSVG = (
 );
 
 /* Main Component */
-export default function NestedVertical() {
-  const [list, setList] = useState([
-    {
-      id: 1,
-      title: "Item 1",
-      children: undefined,
-    },
-    {
-      id: 2,
-      title: "Item 2",
-      children: [],
-    },
-    {
-      id: 3,
-      title: "Item 3",
-      children: undefined,
-    },
-    {
-      id: 4,
-      title: "Item 4",
-      children: [],
-    },
-  ]);
+export default function NestedVertical({ items, updateList }) {
+  const [list, setList] = useState([...items]);
   const [active, setActive] = useState({
     identifier: null,
     groupIdentifier: null,
@@ -156,6 +135,7 @@ export default function NestedVertical() {
         nextGroup.children.splice(nextIndex, 0, draggedItem);
       }
       setList(newList);
+      updateList(newList);
     },
     [list]
   );
@@ -184,8 +164,13 @@ export default function NestedVertical() {
     setActive(meta);
   };
 
+  useEffect(() => {
+    setList(items);
+  }, [items]);
+
   return (
     <List
+      className='w-2/3'
       renderGhost={renderGhost}
       renderPlaceholder={renderPlaceholder}
       renderStackedGroup={renderStackGroup}

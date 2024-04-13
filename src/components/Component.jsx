@@ -15,7 +15,6 @@ const dotsSVG = (
 );
 
 const Component = ({ id, index, title, children }) => {
-  // console.log({ id, index, title, children, isGroup: children ? true : false });
   return (
     <Item
       isGroup={children ? true : false}
