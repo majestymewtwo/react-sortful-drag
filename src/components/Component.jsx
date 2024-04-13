@@ -34,7 +34,7 @@ const Component = ({ id, index, title, content, children, updateContent }) => {
       isUsedCustomDragHandlers
       identifier={id}
       index={index}>
-      <div className='flex p-4 gap-4 border rounded-md'>
+      <div className='flex p-4 gap-4 border-2 rounded-md'>
         <DragHandleComponent className='size-7'>{dotsSVG}</DragHandleComponent>
         <div className='w-full'>
           <div
@@ -44,9 +44,9 @@ const Component = ({ id, index, title, content, children, updateContent }) => {
             ref={titleRef}
             className='focus:outline-none w-full p-2'
             suppressContentEditableWarning
-            contentEditable>
-            {title}
-          </div>
+            contentEditable
+            dangerouslySetInnerHTML={{ __html: title }}
+          />
           <div
             spellCheck={false}
             onBlur={handleChange}
@@ -54,10 +54,10 @@ const Component = ({ id, index, title, content, children, updateContent }) => {
             ref={contentRef}
             className='focus:outline-none w-full p-2'
             suppressContentEditableWarning
-            contentEditable>
-            {content}
-          </div>
-          <div className='ml-8'>{children}</div>
+            contentEditable
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+          <div>{children}</div>
         </div>
       </div>
     </Item>

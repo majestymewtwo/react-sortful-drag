@@ -178,8 +178,23 @@ export default function NestedVertical({ items, updateList }) {
   const handleUpdate = useCallback(
     (data) => {
       let newlist = [...list];
-      const item = newlist.find((val) => val.id === data.id);
-      console.log(data);
+      const mainIndex = newlist.findIndex((val) => val.id === data.id);
+      if (mainIndex !== -1) {
+        newlist[mainIndex] = data;
+      } else {
+        newlist.map((item) => {
+          if (item.children) {
+            const childIndex = item.children.findIndex(
+              (val) => val.id === data.id
+            );
+            if (childIndex !== -1) {
+              item.children[childIndex] = data;
+            }
+          }
+        });
+      }
+      setList(newlist);
+      updateList(newlist);
     },
     [list]
   );
