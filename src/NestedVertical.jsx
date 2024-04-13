@@ -56,8 +56,14 @@ export default function NestedVertical() {
 
   /* Ghost of item when dragged */
   const renderGhost = useCallback(
-    ({ identifier, groupIdentifier, index, isGroup }) => {
-      const item = list[index];
+    ({ groupIdentifier, index }) => {
+      let item;
+      if (!groupIdentifier) {
+        item = list[index];
+      } else {
+        const group = list.find((val) => val.id === groupIdentifier);
+        item = group.children[index];
+      }
       return <h1>{item.title}</h1>;
     },
     [list]
