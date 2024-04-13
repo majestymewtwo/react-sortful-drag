@@ -1,0 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.App {
+  display: flex;
+  gap: 20px;
+  padding: 1%;
+}
+
+.list {
+  width: 20vw;
+}
+
+.draggable {
+  width: 80%;
+  min-height: 100px;
+  background-color: cadetblue;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+  margin: 2%;
+  z-index: 10;
+}
+
+.nested {
+  background-color: gray;
+  padding: 2%;
+  min-height: 20px;
+}
+
+.dropable {
+  background-color: aliceblue;
+  height: 100vh;
+  width: 80vw;
+  overflow-y: scroll;
+  z-index: 0;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
