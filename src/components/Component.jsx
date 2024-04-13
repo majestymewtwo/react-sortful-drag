@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Item, DragHandleComponent } from "react-sortful";
 import commonStyles from "../common.module.css";
 
@@ -14,18 +14,52 @@ const dotsSVG = (
   </svg>
 );
 
-const Component = ({ id, index, title, children }) => {
+const Component = ({ id, index, title, content, children, updateContent }) => {
+  const titleRef = useRef(null);
+  const contentRef = useRef(null);
+
+  const handleChange = () => {
+    const data = {
+      id: id,
+      title: titleRef.current.innerHTML,
+      content: contentRef.current.innerHTML,
+      children: children,
+    };
+    updateContent(data);
+  };
+
   return (
     <Item
       isGroup={children ? true : false}
       isUsedCustomDragHandlers
       identifier={id}
       index={index}>
-      <div className='p-3 border flex items-center gap-4'>
+      <div className='flex p-4 gap-4 border rounded-md'>
         <DragHandleComponent className='size-7'>{dotsSVG}</DragHandleComponent>
-        <h1>{title}</h1>
+        <div className='w-full'>
+          <div
+            spellCheck={false}
+            onBlur={handleChange}
+            onKeyDown={handleChange}
+            ref={titleRef}
+            className='focus:outline-none w-full p-2'
+            suppressContentEditableWarning
+            contentEditable>
+            {title}
+          </div>
+          <div
+            spellCheck={false}
+            onBlur={handleChange}
+            onKeyDown={handleChange}
+            ref={contentRef}
+            className='focus:outline-none w-full p-2'
+            suppressContentEditableWarning
+            contentEditable>
+            {content}
+          </div>
+          <div className='ml-8'>{children}</div>
+        </div>
       </div>
-      <div className='ml-8'>{children}</div>
     </Item>
   );
 };

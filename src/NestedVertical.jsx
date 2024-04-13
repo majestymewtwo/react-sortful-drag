@@ -145,7 +145,13 @@ export default function NestedVertical({ items, updateList }) {
 
     if (item.children)
       return (
-        <Component key={index} id={item.id} index={index} title={item.title}>
+        <Component
+          key={index}
+          id={item.id}
+          index={index}
+          title={item.title}
+          content={item.content}
+          updateContent={handleUpdate}>
           {item.children.map((child, index) => renderElement(child, index))}
         </Component>
       );
@@ -155,14 +161,28 @@ export default function NestedVertical({ items, updateList }) {
         id={item.id}
         index={index}
         title={item.title}
+        content={item.content}
         children={undefined}
+        updateContent={handleUpdate}
       />
     );
   };
 
-  const onDragStart = (meta) => {
-    setActive(meta);
-  };
+  const onDragStart = useCallback(
+    (meta) => {
+      setActive(meta);
+    },
+    [active]
+  );
+
+  const handleUpdate = useCallback(
+    (data) => {
+      let newlist = [...list];
+      const item = newlist.find((val) => val.id === data.id);
+      console.log(data);
+    },
+    [list]
+  );
 
   useEffect(() => {
     setList(items);

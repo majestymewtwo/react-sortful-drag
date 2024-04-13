@@ -19,9 +19,9 @@ function App() {
     setList(newList);
   };
 
-  useEffect(() => {
-    console.log(list);
-  }, [list]);
+  // useEffect(() => {
+  //   console.log(list);
+  // }, [list]);
 
   return (
     <div className='flex gap-2'>

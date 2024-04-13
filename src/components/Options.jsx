@@ -6,7 +6,7 @@ const dataArray = [
     id: "subsection",
     title: "Sub-Section",
     content: "This is a sub-section",
-    children: undefined,
+    children: [],
   },
   {
     id: "section",
@@ -18,7 +18,7 @@ const dataArray = [
     id: "subparagraph",
     title: "Sub-Paragraph",
     content: "This is a sub-paragraph",
-    children: undefined,
+    children: [],
   },
   {
     id: "paragraph",
