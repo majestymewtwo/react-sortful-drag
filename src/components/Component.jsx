@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Item, DragHandleComponent } from "react-sortful";
 import commonStyles from "../common.module.css";
+import ContentEditable from "react-contenteditable";
 
 /* Drag control SVG */
 const dotsSVG = (
@@ -37,25 +38,24 @@ const Component = ({ id, index, title, content, children, updateContent }) => {
       <div className='flex p-4 gap-4 border-2 rounded-md'>
         <DragHandleComponent className='size-7'>{dotsSVG}</DragHandleComponent>
         <div className='w-full'>
-          <div
+          <div className='flex items-center gap-2'>
+            <h1 className='font-semibold'>{index + 1}</h1>
+            <ContentEditable
+              spellCheck={false}
+              html={title}
+              disabled={false}
+              onChange={handleChange}
+              innerRef={titleRef}
+              className='focus:outline-none w-full p-2'
+            />
+          </div>
+          <ContentEditable
             spellCheck={false}
-            onBlur={handleChange}
-            onKeyDown={handleChange}
-            ref={titleRef}
+            html={content}
+            disabled={false}
+            onChange={handleChange}
+            innerRef={contentRef}
             className='focus:outline-none w-full p-2'
-            suppressContentEditableWarning
-            contentEditable
-            dangerouslySetInnerHTML={{ __html: title }}
-          />
-          <div
-            spellCheck={false}
-            onBlur={handleChange}
-            onKeyDown={handleChange}
-            ref={contentRef}
-            className='focus:outline-none w-full p-2'
-            suppressContentEditableWarning
-            contentEditable
-            dangerouslySetInnerHTML={{ __html: content }}
           />
           <div>{children}</div>
         </div>

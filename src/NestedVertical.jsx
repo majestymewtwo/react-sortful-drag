@@ -43,7 +43,7 @@ export default function NestedVertical({ items, updateList }) {
         const group = list.find((val) => val.id === groupIdentifier);
         item = group.children[index];
       }
-      return <h1>{item.title}</h1>;
+      return <div dangerouslySetInnerHTML={{ __html: item.title }} />;
     },
     [list]
   );
@@ -87,11 +87,9 @@ export default function NestedVertical({ items, updateList }) {
       isGroup,
     }) => {
       if (index === nextIndex && groupIdentifier === nextGroupIdentifier) {
-        console.log("Element placed on same position");
         return;
       }
       if (isGroup && nextGroupIdentifier) {
-        console.log("Cannot place group inside another group");
         return;
       }
 
