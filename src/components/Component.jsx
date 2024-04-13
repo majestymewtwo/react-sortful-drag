@@ -15,13 +15,24 @@ const dotsSVG = (
   </svg>
 );
 
-const Component = ({ id, index, title, content, children, updateContent }) => {
+const Component = ({
+  id,
+  number,
+  index,
+  title,
+  type,
+  content,
+  children,
+  updateContent,
+}) => {
   const titleRef = useRef(null);
   const contentRef = useRef(null);
 
   const handleChange = () => {
     const data = {
       id: id,
+      type: type,
+      number: number,
       title: titleRef.current.innerHTML,
       content: contentRef.current.innerHTML,
       children: children,
@@ -39,7 +50,7 @@ const Component = ({ id, index, title, content, children, updateContent }) => {
         <DragHandleComponent className='size-7'>{dotsSVG}</DragHandleComponent>
         <div className='w-full'>
           <div className='flex items-center gap-2'>
-            <h1 className='font-semibold'>{index + 1}</h1>
+            <h1 className='font-semibold'>{number}</h1>
             <ContentEditable
               spellCheck={false}
               html={title}

@@ -3,27 +3,38 @@ import React from "react";
 // Array of objects to be converted into the map
 const dataArray = [
   {
-    id: "subsection",
-    title: "Sub-Section",
-    content: "This is a sub-section",
-    children: undefined,
-  },
-  {
     id: "section",
     title: "Section",
     content: "This is a section",
+    type: "section",
     children: [],
   },
   {
-    id: "subparagraph",
+    id: "sub-section",
+    title: "Sub-Section",
+    content: "This is a sub-section",
+    type: "sub-section",
+    children: [],
+  },
+  {
+    id: "sub-sub-section",
+    title: "Sub-Sub-Section",
+    content: "This is a sub-sub-section",
+    type: "sub-sub-section",
+    children: [],
+  },
+  {
+    id: "sub-paragraph",
     title: "Sub-Paragraph",
     content: "This is a sub-paragraph",
+    type: "sub-paragraph",
     children: [],
   },
   {
     id: "paragraph",
     title: "Paragraph",
     content: "This is a paragraph",
+    type: "paragraph",
     children: [],
   },
 ];

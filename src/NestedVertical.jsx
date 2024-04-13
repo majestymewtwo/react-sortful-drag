@@ -147,8 +147,10 @@ export default function NestedVertical({ items, updateList }) {
           key={index}
           id={item.id}
           index={index}
+          number={item.number}
           title={item.title}
           content={item.content}
+          type={item.type}
           updateContent={handleUpdate}>
           {item.children.map((child, index) => renderElement(child, index))}
         </Component>
@@ -158,8 +160,10 @@ export default function NestedVertical({ items, updateList }) {
         key={index}
         id={item.id}
         index={index}
+        number={item.number}
         title={item.title}
         content={item.content}
+        type={item.type}
         children={undefined}
         updateContent={handleUpdate}
       />
@@ -178,7 +182,7 @@ export default function NestedVertical({ items, updateList }) {
       let newlist = [...list];
       const mainIndex = newlist.findIndex((val) => val.id === data.id);
       if (mainIndex !== -1) {
-        newlist[mainIndex] = data;
+        newlist[mainIndex] = { ...data };
       } else {
         newlist.map((item) => {
           if (item.children) {
@@ -191,10 +195,9 @@ export default function NestedVertical({ items, updateList }) {
           }
         });
       }
-      setList(newlist);
       updateList(newlist);
     },
-    [list]
+    [list, updateList]
   );
 
   useEffect(() => {
