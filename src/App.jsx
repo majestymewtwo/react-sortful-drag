@@ -44,7 +44,8 @@ function App() {
       const data = { ...item };
       data.id = `${item.id}-${Date.now()}`;
       if (data.type === "text") {
-        list[list.length - 1].children.push(data);
+        if (list.length > 0) list[list.length - 1].children.push(data);
+        else list.push(data);
         setList([...list]);
       } else {
         setList([...list, data]);
