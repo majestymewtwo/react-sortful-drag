@@ -43,7 +43,12 @@ function App() {
     (item) => {
       const data = { ...item };
       data.id = `${item.id}-${Date.now()}`;
-      setList([...list, data]);
+      if (data.type === "text") {
+        list[list.length - 1].children.push(data);
+        setList([...list]);
+      } else {
+        setList([...list, data]);
+      }
       setUpdated(false);
     },
     [list, updated]
@@ -59,8 +64,12 @@ function App() {
     }
   }, [list, updated]);
 
+  useEffect(() => {
+    console.log(list);
+  }, [list]);
+
   return (
-    <div className='flex gap-2'>
+    <div className='flex gap-2 bg-gray-100 min-h-screen'>
       <Options addElement={handleAddElement} />
       <NestedVertical items={list} updateList={handleListUpdate} />
     </div>

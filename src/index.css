@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+[contentEditable="true"]:empty:not(:focus):before,
+[contentEditable="true"][data-ph]:empty:before {
+  content: attr(data-ph);
+  text-align: right;
+  font-weight: 400;
+  line-height: normal;
+  z-index: -1;
+  color: rgba(66, 66, 66, 0.4);
+}
+
+[contentEditable="true"]:not(:empty):before,
+[contentEditable="true"]:focus:before {
+  content: none; /* Hide the placeholder when there is some text or when the user starts typing */
+}

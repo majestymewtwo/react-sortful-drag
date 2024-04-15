@@ -43,7 +43,11 @@ export default function NestedVertical({ items, updateList }) {
         const group = list.find((val) => val.id === groupIdentifier);
         item = group.children[index];
       }
-      return <div dangerouslySetInnerHTML={{ __html: item.title }} />;
+      return (
+        <div className='border p-2 rounded-sm flex items-center justify-between max-w-md bg-white/75'>
+          {item.text}
+        </div>
+      );
     },
     [list]
   );
@@ -138,7 +142,7 @@ export default function NestedVertical({ items, updateList }) {
     [list]
   );
 
-  const renderElement = (item, index) => {
+  const renderElement = (item, index, isRoot) => {
     if (!item) return;
 
     if (item.children)
@@ -148,11 +152,14 @@ export default function NestedVertical({ items, updateList }) {
           id={item.id}
           index={index}
           number={item.number}
-          title={item.title}
-          content={item.content}
+          text={item.text}
           type={item.type}
-          updateContent={handleUpdate}>
-          {item.children.map((child, index) => renderElement(child, index))}
+          updateContent={handleUpdate}
+          isInRoot={isRoot}
+          content={item.children}>
+          {item.children.map((child, index) =>
+            renderElement(child, index, false)
+          )}
         </Component>
       );
     return (
@@ -161,11 +168,12 @@ export default function NestedVertical({ items, updateList }) {
         id={item.id}
         index={index}
         number={item.number}
-        title={item.title}
-        content={item.content}
+        text={item.text}
         type={item.type}
         children={undefined}
+        content={undefined}
         updateContent={handleUpdate}
+        isInRoot={isRoot}
       />
     );
   };
@@ -215,7 +223,7 @@ export default function NestedVertical({ items, updateList }) {
       isDisabled={false}
       renderDropLine={renderDropLineElement}>
       <div className='p-4'>
-        {list.map((item, index) => renderElement(item, index))}
+        {list.map((item, index) => renderElement(item, index, true))}
       </div>
     </List>
   );

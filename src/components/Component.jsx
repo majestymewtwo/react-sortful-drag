@@ -19,23 +19,22 @@ const Component = ({
   id,
   number,
   index,
-  title,
+  text,
   type,
   content,
   children,
   updateContent,
+  isInRoot,
 }) => {
-  const titleRef = useRef(null);
-  const contentRef = useRef(null);
+  const textRef = useRef(null);
 
   const handleChange = () => {
     const data = {
       id: id,
       type: type,
       number: number,
-      title: titleRef.current.innerHTML,
-      content: contentRef.current.innerHTML,
-      children: children,
+      text: textRef.current.innerHTML,
+      children: content,
     };
     updateContent(data);
   };
@@ -46,29 +45,29 @@ const Component = ({
       isUsedCustomDragHandlers
       identifier={id}
       index={index}>
-      <div className='flex p-4 gap-4 border-2 rounded-md'>
-        <DragHandleComponent className='size-7'>{dotsSVG}</DragHandleComponent>
-        <div className='w-full'>
-          <div className='flex items-center gap-2'>
-            <h1 className='font-semibold'>{number}</h1>
+      <div className='flex gap-2'>
+        <DragHandleComponent className='size-7 cursor-pointer py-1'>
+          {dotsSVG}
+        </DragHandleComponent>
+        <div className={`w-full ${isInRoot && "border-2"} rounded-md bg-white`}>
+          <div
+            className={`flex items-center gap-2 ${
+              isInRoot && children && children.length > 0 && "border-b-2"
+            } px-3`}>
+            {number && number.length > 0 && (
+              <h1 className='font-semibold'>{number}</h1>
+            )}
             <ContentEditable
+              data-ph={"Type Something.."}
               spellCheck={false}
-              html={title}
+              html={text}
               disabled={false}
               onChange={handleChange}
-              innerRef={titleRef}
-              className='focus:outline-none w-full p-2'
+              innerRef={textRef}
+              className='focus:outline-none w-full py-2'
             />
           </div>
-          <ContentEditable
-            spellCheck={false}
-            html={content}
-            disabled={false}
-            onChange={handleChange}
-            innerRef={contentRef}
-            className='focus:outline-none w-full p-2'
-          />
-          <div>{children}</div>
+          {children && <div className='px-4'>{children}</div>}
         </div>
       </div>
     </Item>
