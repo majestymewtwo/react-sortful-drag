@@ -64,9 +64,9 @@ function App() {
     }
   }, [list, updated]);
 
-  useEffect(() => {
-    console.log(list);
-  }, [list]);
+  // useEffect(() => {
+  //   console.log(list);
+  // }, [list]);
 
   return (
     <div className='flex gap-2 bg-gray-100 min-h-screen'>

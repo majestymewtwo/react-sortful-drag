@@ -156,7 +156,8 @@ export default function NestedVertical({ items, updateList }) {
           type={item.type}
           updateContent={handleUpdate}
           isInRoot={isRoot}
-          content={item.children}>
+          content={item.children}
+          removeElement={handleRemove}>
           {item.children.map((child, index) =>
             renderElement(child, index, false)
           )}
@@ -174,6 +175,7 @@ export default function NestedVertical({ items, updateList }) {
         content={undefined}
         updateContent={handleUpdate}
         isInRoot={isRoot}
+        removeElement={handleRemove}
       />
     );
   };
@@ -199,6 +201,27 @@ export default function NestedVertical({ items, updateList }) {
             );
             if (childIndex !== -1) {
               item.children[childIndex] = data;
+            }
+          }
+        });
+      }
+      updateList(newlist);
+    },
+    [list, updateList]
+  );
+
+  const handleRemove = useCallback(
+    (id) => {
+      let newlist = [...list];
+      const mainIndex = newlist.findIndex((val) => val.id === id);
+      if (mainIndex !== -1) {
+        newlist.splice(mainIndex, 1);
+      } else {
+        newlist.map((item) => {
+          if (item.children) {
+            const childIndex = item.children.findIndex((val) => val.id === id);
+            if (childIndex !== -1) {
+              item.children.splice(childIndex, 1);
             }
           }
         });

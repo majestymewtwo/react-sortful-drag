@@ -25,6 +25,7 @@ const Component = ({
   children,
   updateContent,
   isInRoot,
+  removeElement,
 }) => {
   const textRef = useRef(null);
 
@@ -51,11 +52,11 @@ const Component = ({
         </DragHandleComponent>
         <div className={`w-full ${isInRoot && "border-2"} rounded-md bg-white`}>
           <div
-            className={`flex items-center gap-2 ${
+            className={`flex items-start gap-2 ${
               isInRoot && children && children.length > 0 && "border-b-2"
             } px-3`}>
             {number && number.length > 0 && (
-              <h1 className='font-semibold'>{number}</h1>
+              <h1 className='font-semibold py-2'>{number}</h1>
             )}
             <ContentEditable
               data-ph={"Type Something.."}
@@ -66,8 +67,16 @@ const Component = ({
               innerRef={textRef}
               className='focus:outline-none w-full py-2'
             />
+            <div className='py-2'>
+              <img
+                className='cursor-pointer size-4'
+                src='/assets/remove.png'
+                alt='remove'
+                onClick={() => removeElement(id)}
+              />
+            </div>
           </div>
-          {children && <div className='px-4'>{children}</div>}
+          {children && <div className='pl-4'>{children}</div>}
         </div>
       </div>
     </Item>
