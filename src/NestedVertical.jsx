@@ -153,6 +153,7 @@ export default function NestedVertical({ items, updateList }) {
           index={index}
           number={item.number}
           text={item.text}
+          placeholder={item.placeholder}
           type={item.type}
           updateContent={handleUpdate}
           isInRoot={isRoot}
@@ -170,6 +171,7 @@ export default function NestedVertical({ items, updateList }) {
         index={index}
         number={item.number}
         text={item.text}
+        placeholder={item.placeholder}
         type={item.type}
         children={undefined}
         content={undefined}
