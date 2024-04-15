@@ -2,6 +2,7 @@ import { List, Item, DragHandleComponent } from "react-sortful";
 import commonStyles from "./common.module.css";
 import Component from "./components/Component";
 import { useCallback, useEffect, useState } from "react";
+import Table from "./components/Table";
 
 /* Dropping line Styles */
 const renderDropLineElement = (injectedProps) => (
@@ -144,6 +145,17 @@ export default function NestedVertical({ items, updateList }) {
 
   const renderElement = (item, index, isRoot) => {
     if (!item) return;
+
+    if (item.type === "table")
+      return (
+        <Table
+          key={index}
+          id={item.id}
+          index={index}
+          cols={item.cols}
+          rows={item.rows}
+        />
+      );
 
     if (item.children)
       return (

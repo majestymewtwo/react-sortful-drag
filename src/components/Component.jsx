@@ -4,7 +4,7 @@ import commonStyles from "../common.module.css";
 import ContentEditable from "react-contenteditable";
 
 /* Drag control SVG */
-const dotsSVG = (
+export const dotsSVG = (
   <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'>
     <circle cx='18' cy='12' r='3' />
     <circle cx='18' cy='24' r='3' />
