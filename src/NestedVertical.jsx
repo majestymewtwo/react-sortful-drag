@@ -93,15 +93,22 @@ export default function NestedVertical({ items, updateList }) {
         nextIndex,
         isGroup,
       } = meta;
+      let newList = [...list];
       if (index === nextIndex && groupIdentifier === nextGroupIdentifier) {
-        updateItemKey(meta);
+        let item;
+        if (groupIdentifier) {
+          let group = list.find((val) => val.id === groupIdentifier);
+          item = group.children[index];
+        } else {
+          item = newList[index];
+        }
+        if (item.type === "table") updateItemKey(meta);
         return;
       }
       if (isGroup && nextGroupIdentifier) {
         return;
       }
 
-      let newList = [...list];
       if (!nextGroupIdentifier) {
         if (!isGroup && groupIdentifier) {
           let draggedItem;
@@ -262,7 +269,6 @@ export default function NestedVertical({ items, updateList }) {
         curItem = curGroup[index];
         curGroup.children.splice(index, 1);
       }
-      if (curItem.type !== "table") return;
       curItem.key = randomId();
       updateList(newList);
     },

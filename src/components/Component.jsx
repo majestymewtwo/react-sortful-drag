@@ -32,6 +32,7 @@ const Component = ({
 }) => {
   const textRef = useRef(null);
   const [visible, setVisible] = useState(true);
+  const [close, setClose] = useState(false);
 
   const handleChange = () => {
     const data = {
@@ -50,9 +51,9 @@ const Component = ({
     setVisible((visible) => !visible);
   };
 
-  useEffect(() => {
-    console.log("Rerender");
-  }, []);
+  const toggleClose = () => {
+    setClose((close) => !close);
+  };
 
   return (
     <Item
@@ -69,10 +70,10 @@ const Component = ({
             isInRoot ? "border-2 rounded-md" : index !== 0 && "border-t-2"
           } bg-white`}>
           <div
+            onMouseEnter={toggleClose}
+            onMouseLeave={toggleClose}
             className={`flex items-center gap-2 ${
-              type !== "text"
-                ? "text-lg font-semibold text-gray-600"
-                : "text-sm"
+              type !== "text" ? "text-gray-600" : "text-sm"
             } ${
               isInRoot &&
               visible &&
@@ -81,7 +82,9 @@ const Component = ({
               "border-b-2"
             } px-3`}>
             {number && number.length > 0 && (
-              <h1 className='font-semibold py-2 w-1/12'>{number}</h1>
+              <h1 className='font-semibold py-2 w-[3%] text-center'>
+                {number}
+              </h1>
             )}
             <ContentEditable
               data-ph={placeholder}
@@ -91,19 +94,21 @@ const Component = ({
               onChange={handleChange}
               innerRef={textRef}
               className={`focus:outline-none ${
-                children ? "w-10/12" : "w-11/12"
+                children ? "w-[85%]" : "w-[95%]"
               } py-2`}
             />
-            <div className='py-2 w-1/12 flex justify-center'>
-              <img
-                className='cursor-pointer size-4'
-                src='/assets/remove.png'
-                alt='remove'
-                onClick={() => removeElement(id)}
-              />
+            <div className='py-2 w-[5%] flex justify-center'>
+              {close && (
+                <img
+                  className='cursor-pointer size-4'
+                  src='/assets/remove.png'
+                  alt='remove'
+                  onClick={() => removeElement(id)}
+                />
+              )}
             </div>
             {children && (
-              <div className='py-2 w-1/12 flex justify-center'>
+              <div className='py-2 w-[5%] flex justify-center'>
                 <img
                   className={`cursor-pointer w-4 h-2 ${
                     visible && "rotate-180"
