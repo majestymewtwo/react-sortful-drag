@@ -48,7 +48,7 @@ const dataArray = [
     id: "table",
     rows: 0,
     cols: 0,
-    data: [[]],
+    state: null,
     type: "table",
     placeholder: "Enter Text here",
     children: undefined,
@@ -129,10 +129,13 @@ const SelectTable = ({ addTable }) => {
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content className='p-4 bg-white rounded-md w-full grid grid-cols-10'>
+          <h1 className='col-span-10 text-center mb-2'>
+            {table.rows}x{table.cols}
+          </h1>
           {Array.from({ length: 10 }).map((_, row) =>
             Array.from({ length: 10 }).map((_, col) => (
               <DropdownMenu.Item
-                className={`size-4 border col-span-1 focus:outline-none ${
+                className={`size-4 border col-span-1 focus:outline-none transition-colors ease-in-out duration-200 ${
                   row + 1 <= table.rows && col + 1 <= table.cols
                     ? "bg-blue-600"
                     : ""

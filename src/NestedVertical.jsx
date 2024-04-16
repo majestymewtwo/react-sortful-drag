@@ -154,6 +154,8 @@ export default function NestedVertical({ items, updateList }) {
           index={index}
           cols={item.cols}
           rows={item.rows}
+          data={item.state}
+          updateState={handleUpdate}
         />
       );
 
