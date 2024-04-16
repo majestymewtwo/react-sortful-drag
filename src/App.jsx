@@ -2,17 +2,18 @@ import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import NestedVertical from "./NestedVertical";
 import Options from "./components/Options";
+import { randomId } from "./utils/math";
 
 function App() {
   const [list, setList] = useState([]);
   const [updated, setUpdated] = useState(false);
+  let sectionCount = 0;
+  let subsectionCount = 0;
+  let subSubsectionCount = 0;
+  let tableCount = 0;
 
   const updateNumbering = useCallback(
     (newList = list) => {
-      let sectionCount = 0;
-      let subsectionCount = 0;
-      let subSubsectionCount = 0;
-
       const updatedList = newList.map((item) => {
         if (item.type === "section") {
           sectionCount++;
@@ -29,6 +30,12 @@ function App() {
             ...item,
             number: `${sectionCount}.${subsectionCount}.${subSubsectionCount}`,
           };
+        } else if (item.type === "table") {
+          tableCount++;
+          return {
+            ...item,
+            number: `${tableCount}`,
+          };
         } else {
           return { ...item, number: "" };
         }
@@ -43,6 +50,7 @@ function App() {
     (item) => {
       const data = { ...item };
       data.id = `${item.id}-${Date.now()}`;
+      data.key = randomId();
       if (data.type === "text" || data.type === "table") {
         if (list.length > 0 && list[list.length - 1].children)
           list[list.length - 1].children.push(data);

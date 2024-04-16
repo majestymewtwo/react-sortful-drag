@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { dotsSVG } from "./Component";
 import { DragHandleComponent, Item } from "react-sortful";
+import "prosemirror-view/style/prosemirror.css";
 import PropTypes from "prop-types";
 import { Schema } from "prosemirror-model";
 import { EditorState } from "prosemirror-state";
@@ -65,10 +66,6 @@ const Table = ({ id, index, rows, cols, number }) => {
   const [showEditor, setShowEditor] = useState(true);
 
   useEffect(() => {
-    console.log("Rerender");
-  }, []);
-
-  useEffect(() => {
     if (!showEditor) {
       return;
     }
@@ -130,7 +127,8 @@ const Table = ({ id, index, rows, cols, number }) => {
           {dotsSVG}
         </DragHandleComponent>
         <div className='bg-white border p-2 rounded-md w-full'>
-          <label className='text-black font-semibold'>{`Table ${number} ${rows}-${cols}`}</label>
+          <h1 className='text-black font-semibold'>{`Table ${number}`}</h1>
+          <h2 className='text-sm'>{`rows:${rows} cols:${cols}`}</h2>
           <input
             type='text'
             id={`Caption ${number}`}

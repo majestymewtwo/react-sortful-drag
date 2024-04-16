@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Item, DragHandleComponent } from "react-sortful";
 import commonStyles from "../common.module.css";
 import ContentEditable from "react-contenteditable";
+import { randomId } from "../utils/math";
 
 /* Drag control SVG */
 export const dotsSVG = (
@@ -21,6 +22,7 @@ const Component = ({
   index,
   text,
   type,
+  keyValue,
   content,
   children,
   placeholder,
@@ -36,6 +38,7 @@ const Component = ({
       id: id,
       type: type,
       number: number,
+      key: keyValue,
       placeholder: placeholder,
       text: textRef.current.innerHTML,
       children: content,
@@ -46,6 +49,10 @@ const Component = ({
   const toggleView = () => {
     setVisible((visible) => !visible);
   };
+
+  useEffect(() => {
+    console.log("Rerender");
+  }, []);
 
   return (
     <Item

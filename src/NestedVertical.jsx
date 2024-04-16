@@ -3,6 +3,7 @@ import commonStyles from "./common.module.css";
 import Component from "./components/Component";
 import { useCallback, useEffect, useState } from "react";
 import Table from "./components/Table";
+import { randomId } from "./utils/math";
 
 /* Dropping line Styles */
 const renderDropLineElement = (injectedProps) => (
@@ -83,15 +84,17 @@ export default function NestedVertical({ items, updateList }) {
   };
 
   const onDragEnd = useCallback(
-    ({
-      identifier,
-      groupIdentifier,
-      index,
-      nextGroupIdentifier,
-      nextIndex,
-      isGroup,
-    }) => {
+    (meta) => {
+      const {
+        identifier,
+        groupIdentifier,
+        index,
+        nextGroupIdentifier,
+        nextIndex,
+        isGroup,
+      } = meta;
       if (index === nextIndex && groupIdentifier === nextGroupIdentifier) {
+        updateItemKey(meta);
         return;
       }
       if (isGroup && nextGroupIdentifier) {
@@ -137,10 +140,9 @@ export default function NestedVertical({ items, updateList }) {
         const nextGroup = newList.find((val) => val.id === nextGroupIdentifier);
         nextGroup.children.splice(nextIndex, 0, draggedItem);
       }
-      setList(newList);
       updateList(newList);
     },
-    [list]
+    [list, updateList]
   );
 
   const renderElement = (item, index, isRoot) => {
@@ -149,18 +151,20 @@ export default function NestedVertical({ items, updateList }) {
     if (item.type === "table")
       return (
         <Table
-          key={index}
+          key={`${item.key}-${index}`}
           id={item.id}
           index={index}
           cols={item.cols}
           rows={item.rows}
+          number={item.number}
         />
       );
 
     if (item.children)
       return (
         <Component
-          key={index}
+          key={item.key}
+          keyValue={item.key}
           id={item.id}
           index={index}
           number={item.number}
@@ -178,7 +182,8 @@ export default function NestedVertical({ items, updateList }) {
       );
     return (
       <Component
-        key={index}
+        key={item.key}
+        keyValue={item.key}
         id={item.id}
         index={index}
         number={item.number}
@@ -245,13 +250,32 @@ export default function NestedVertical({ items, updateList }) {
     [list, updateList]
   );
 
+  const updateItemKey = useCallback(
+    (meta) => {
+      const { groupIdentifier, index } = meta;
+      let curItem;
+      let newList = [...list];
+      if (!groupIdentifier) {
+        curItem = newList[index];
+      } else {
+        const curGroup = newList.find((val) => val.id === groupIdentifier);
+        curItem = curGroup[index];
+        curGroup.children.splice(index, 1);
+      }
+      if (curItem.type !== "table") return;
+      curItem.key = randomId();
+      updateList(newList);
+    },
+    [list, updateList]
+  );
+
   useEffect(() => {
     setList(items);
   }, [items]);
 
   return (
     <List
-      className='w-2/3'
+      className='w-5/6'
       renderGhost={renderGhost}
       renderPlaceholder={renderPlaceholder}
       renderStackedGroup={renderStackGroup}

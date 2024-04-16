@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { randomId } from "../utils/math";
 
 const dataArray = [
   {
     id: "section",
     text: "",
     type: "section",
+    key: "",
     placeholder: "Enter Section here",
     children: [],
   },
@@ -13,6 +15,7 @@ const dataArray = [
     id: "sub-section",
     text: "",
     type: "sub-section",
+    key: "",
     placeholder: "Enter Sub-Section here",
     children: [],
   },
@@ -20,6 +23,7 @@ const dataArray = [
     id: "sub-sub-section",
     text: "",
     type: "sub-sub-section",
+    key: "",
     placeholder: "Enter Sub-Subsection here",
     children: [],
   },
@@ -27,6 +31,7 @@ const dataArray = [
     id: "sub-paragraph",
     text: "",
     type: "sub-paragraph",
+    key: "",
     placeholder: "Enter Sub-Paragraph here",
     children: [],
   },
@@ -34,7 +39,8 @@ const dataArray = [
     id: "paragraph",
     text: "",
     placeholder: "Enter Paragraph here",
-    type: "paragraph",
+    type: "section",
+    key: "",
     children: [],
   },
   {
@@ -42,6 +48,7 @@ const dataArray = [
     text: "",
     type: "text",
     placeholder: "Enter Text here",
+    key: "",
     children: undefined,
   },
   {
@@ -50,6 +57,7 @@ const dataArray = [
     cols: 0,
     data: [[]],
     type: "table",
+    key: "",
     placeholder: "Enter Text here",
     children: undefined,
   },
@@ -63,6 +71,7 @@ const Options = ({ addElement }) => {
     if (newItem.type !== "text") {
       const text = { ...data.get("text") };
       text.id = `${text.id}-${Date.now()}`;
+      text.key = randomId();
       if (!newItem.children) {
         newItem.children = [];
       }
@@ -79,7 +88,7 @@ const Options = ({ addElement }) => {
   };
 
   return (
-    <div className='p-4 space-y-3 w-1/4'>
+    <div className='p-4 space-y-3 w-1/6'>
       {[...data.values()].map((item) => {
         if (item.type !== "table")
           return (
