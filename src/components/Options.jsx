@@ -60,6 +60,12 @@ const dataArray = [
     type: "table",
     key: "",
     children: undefined,
+    options: {
+      isWide: false,
+      isLong: false,
+      width: 0,
+      position: "1",
+    },
   },
 ];
 

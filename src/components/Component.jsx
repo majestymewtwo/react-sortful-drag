@@ -97,7 +97,7 @@ const Component = ({
                 children ? "w-[85%]" : "w-[95%]"
               } py-2`}
             />
-            <div className='py-2 w-[5%] flex justify-center'>
+            <div className='py-2 w-[5%] flex justify-center' title='Remove'>
               {close && (
                 <img
                   className='cursor-pointer size-4'
