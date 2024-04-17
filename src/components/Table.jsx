@@ -190,6 +190,7 @@ const Table = ({
     if (editorView) {
       command(editorView.state, editorView.dispatch, editorView);
       editorView.focus();
+      updateDataDebounced();
     }
   };
 

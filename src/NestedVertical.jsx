@@ -46,9 +46,10 @@ export default function NestedVertical({ items, updateList }) {
         item = group.children[index];
       }
       return (
-        <div className='border p-2 rounded-sm flex items-center justify-between max-w-md bg-white/75'>
-          {item.text}
-        </div>
+        <div
+          className='border p-2 rounded-sm flex items-center justify-between max-w-md bg-white/75'
+          dangerouslySetInnerHTML={{ __html: item.text ?? item.caption }}
+        />
       );
     },
     [list]
@@ -58,7 +59,12 @@ export default function NestedVertical({ items, updateList }) {
   const renderPlaceholder = useCallback(
     (props) => {
       return (
-        <div style={props.style} className='p-3 border flex items-center gap-4'>
+        <div
+          style={{
+            width: Math.min(props.style.width, 800),
+            height: Math.min(props.style.height, 600),
+          }}
+          className='p-3 border border-dashed flex items-center gap-4 max-h-40'>
           <DragHandleComponent className='size-7'>
             {dotsSVG}
           </DragHandleComponent>
