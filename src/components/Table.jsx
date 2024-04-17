@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { dotsSVG } from "./Component";
 import { DragHandleComponent, Item } from "react-sortful";
 import "prosemirror-view/style/prosemirror.css";
@@ -38,6 +38,7 @@ import removeIcon from "../assets/Remove.svg";
 import codeIcon from "../assets/custom.svg";
 import editorIcon from "../assets/Editor.svg";
 import settingsIcon from "../assets/Settings.svg";
+import { debounce } from "lodash";
 
 const schema = new Schema({
   nodes: baseSchema.spec.nodes.append(
@@ -60,10 +61,22 @@ const schema = new Schema({
   marks: baseSchema.spec.marks,
 });
 
-const Table = ({ id, index, rows, cols, number }) => {
+const Table = ({
+  id,
+  index,
+  keyValue,
+  caption,
+  rows,
+  cols,
+  data,
+  number,
+  updateData,
+  removeElement,
+}) => {
   const editorRef = useRef(null);
   const [editorView, setEditorView] = useState(null);
   const [showEditor, setShowEditor] = useState(true);
+  const [tableCaption, setTableCaption] = useState(caption);
 
   useEffect(() => {
     if (!showEditor) {
@@ -84,9 +97,31 @@ const Table = ({ id, index, rows, cols, number }) => {
       )
     );
 
-    const doc = schema.nodes.doc.create(null, tableNode ? [tableNode] : []);
+    let docNode;
+    if (data) {
+      docNode = schema.nodeFromJSON(data);
+    } else {
+      docNode = schema.nodes.doc.create(
+        null,
+        schema.nodes.table.createAndFill(
+          null,
+          Array.from({ length: rows }, () =>
+            schema.nodes.table_row.createAndFill(
+              null,
+              Array.from({ length: cols }, () =>
+                schema.nodes.table_cell.createAndFill(
+                  null,
+                  schema.nodes.paragraph.createAndFill()
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+
     const editorState = EditorState.create({
-      doc,
+      doc: docNode,
       plugins: [
         columnResizing(),
         tableEditing(),
@@ -111,7 +146,34 @@ const Table = ({ id, index, rows, cols, number }) => {
     });
     setEditorView(view);
     return () => view.destroy();
-  }, [id, rows, cols, showEditor]);
+  }, [id, rows, cols, data, showEditor]);
+
+  const updateDataDebounced = useCallback(
+    debounce(() => {
+      handleChange();
+    }, 500),
+    [updateData]
+  );
+
+  const handleChange = () => {
+    if (editorView) {
+      const data = {
+        id: id,
+        rows: rows,
+        cols: cols,
+        caption: tableCaption,
+        data: editorView.state.doc.toJSON(),
+        type: "table",
+        keyValue: keyValue,
+        children: undefined,
+      };
+      updateData(data);
+    }
+  };
+
+  const updateCaption = (e) => {
+    setTableCaption(e.target.value);
+  };
 
   const executeCommand = (command) => {
     if (editorView) {
@@ -120,6 +182,10 @@ const Table = ({ id, index, rows, cols, number }) => {
     }
   };
 
+  useEffect(() => {
+    handleChange();
+  }, [tableCaption]);
+
   return (
     <Item isUsedCustomDragHandlers identifier={id} index={index}>
       <div className='flex gap-2'>
@@ -127,15 +193,31 @@ const Table = ({ id, index, rows, cols, number }) => {
           {dotsSVG}
         </DragHandleComponent>
         <div className='bg-white border p-2 rounded-md w-full'>
-          <h1 className='text-black font-semibold'>{`Table ${number}`}</h1>
-          <h2 className='text-sm'>{`rows:${rows} cols:${cols}`}</h2>
+          <h1 className='text-black font-semibold'>{`Table ${
+            number ?? ""
+          }`}</h1>
+          <div>
+            <img
+              className='cursor-pointer size-4'
+              src='/assets/remove.png'
+              alt='remove'
+              onClick={() => removeElement(id)}
+            />
+          </div>
           <input
             type='text'
-            id={`Caption ${number}`}
             placeholder='Caption'
+            value={tableCaption}
+            onChange={updateCaption}
+            spellCheck={false}
             className='text-sm w-full mb-1 p-2 bg-[#f5f5f5a3] outline-none text-black rounded text-justify cursor-text'
           />
-          <div ref={editorRef} className='editor-content' />
+          <div
+            spellCheck={false}
+            onKeyDown={updateDataDebounced}
+            ref={editorRef}
+            className='editor-content'
+          />
         </div>
       </div>
     </Item>

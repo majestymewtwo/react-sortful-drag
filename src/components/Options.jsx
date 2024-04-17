@@ -53,12 +53,12 @@ const dataArray = [
   },
   {
     id: "table",
+    caption: "",
     rows: 0,
     cols: 0,
-    data: [[]],
+    data: undefined,
     type: "table",
     key: "",
-    placeholder: "Enter Text here",
     children: undefined,
   },
 ];

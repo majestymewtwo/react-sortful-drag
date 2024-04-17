@@ -102,7 +102,6 @@ export default function NestedVertical({ items, updateList }) {
         } else {
           item = newList[index];
         }
-        console.log(item);
         if (item.type === "table") updateItemKey(meta);
         return;
       }
@@ -162,9 +161,14 @@ export default function NestedVertical({ items, updateList }) {
           key={`${item.key}-${index}`}
           id={item.id}
           index={index}
+          keyValue={item.key}
+          caption={item.caption}
           cols={item.cols}
           rows={item.rows}
+          data={item.data}
           number={item.number}
+          updateData={handleUpdate}
+          removeElement={handleRemove}
         />
       );
 
@@ -216,6 +220,10 @@ export default function NestedVertical({ items, updateList }) {
 
   const handleUpdate = useCallback(
     (data) => {
+      // if (data.type === "table") {
+      //   console.log(data);
+      //   return;
+      // }
       let newlist = [...list];
       const mainIndex = newlist.findIndex((val) => val.id === data.id);
       if (mainIndex !== -1) {
