@@ -14,36 +14,56 @@ function App() {
 
   const updateNumbering = useCallback(
     (newList = list) => {
-      const updatedList = newList.map((item) => {
-        if (item.type === "section") {
-          sectionCount++;
-          subsectionCount = 0;
-          subSubsectionCount = 0;
-          return { ...item, number: `${sectionCount}` };
-        } else if (item.type === "sub-section") {
-          subsectionCount++;
-          subSubsectionCount = 0;
-          return { ...item, number: `${sectionCount}.${subsectionCount}` };
-        } else if (item.type === "sub-sub-section") {
-          subSubsectionCount++;
-          return {
-            ...item,
-            number: `${sectionCount}.${subsectionCount}.${subSubsectionCount}`,
-          };
-        } else if (item.type === "table") {
-          tableCount++;
-          return {
-            ...item,
-            number: `${tableCount}`,
-          };
-        } else {
-          return { ...item, number: "" };
-        }
-      });
+      let sectionCount = 0;
+      let subsectionCount = 0;
+      let subSubsectionCount = 0;
+      let tableCount = 0;
+
+      const updateItemNumbers = (items) => {
+        return items.map((item) => {
+          switch (item.type) {
+            case "section":
+              sectionCount++;
+              subsectionCount = 0;
+              subSubsectionCount = 0;
+              return {
+                ...item,
+                number: `${sectionCount}`,
+                children: item.children ? updateItemNumbers(item.children) : [],
+              };
+
+            case "sub-section":
+              subsectionCount++;
+              subSubsectionCount = 0;
+              return {
+                ...item,
+                number: `${sectionCount}.${subsectionCount}`,
+                children: item.children ? updateItemNumbers(item.children) : [],
+              };
+
+            case "sub-sub-section":
+              subSubsectionCount++;
+              return {
+                ...item,
+                number: `${sectionCount}.${subsectionCount}.${subSubsectionCount}`,
+                children: item.children ? updateItemNumbers(item.children) : [],
+              };
+
+            case "table":
+              tableCount++;
+              return { ...item, number: `${tableCount}` };
+
+            default:
+              return item; // For items that do not need special numbering
+          }
+        });
+      };
+
+      const updatedList = updateItemNumbers(newList);
       setList([...updatedList]);
-      setUpdated(true);
+      setUpdated(true); // Assuming you manage a state to track if updates were made
     },
-    [list, updated]
+    [list, setUpdated] // `setUpdated` should be included if it's a state setter function used in this context
   );
 
   const handleAddElement = useCallback(
@@ -51,10 +71,11 @@ function App() {
       const data = { ...item };
       data.id = `${item.id}-${Date.now()}`;
       data.key = randomId();
+      if (data.type === "table") tableCount++;
       if (data.type === "text" || data.type === "table") {
         if (list.length > 0 && list[list.length - 1].children)
           list[list.length - 1].children.push(data);
-        else list.push(data);
+        else if (data.type === "text") list.push(data);
         setList([...list]);
       } else {
         setList([...list, data]);

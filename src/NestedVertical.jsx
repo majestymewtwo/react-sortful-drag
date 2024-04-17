@@ -102,6 +102,7 @@ export default function NestedVertical({ items, updateList }) {
         } else {
           item = newList[index];
         }
+        console.log(item);
         if (item.type === "table") updateItemKey(meta);
         return;
       }
@@ -260,16 +261,15 @@ export default function NestedVertical({ items, updateList }) {
   const updateItemKey = useCallback(
     (meta) => {
       const { groupIdentifier, index } = meta;
-      let curItem;
       let newList = [...list];
-      if (!groupIdentifier) {
-        curItem = newList[index];
+      let item;
+      if (groupIdentifier) {
+        let group = list.find((val) => val.id === groupIdentifier);
+        item = group.children[index];
       } else {
-        const curGroup = newList.find((val) => val.id === groupIdentifier);
-        curItem = curGroup[index];
-        curGroup.children.splice(index, 1);
+        item = newList[index];
       }
-      curItem.key = randomId();
+      item.key = randomId();
       updateList(newList);
     },
     [list, updateList]
