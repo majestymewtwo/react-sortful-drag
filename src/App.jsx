@@ -73,9 +73,12 @@ function App() {
       data.key = randomId();
       if (data.type === "table") tableCount++;
       if (data.type === "text" || data.type === "table") {
-        if (list.length > 0 && list[list.length - 1].children)
-          list[list.length - 1].children.push(data);
-        else if (data.type === "text") list.push(data);
+        let index = list.length - 1;
+        if (index === -1) list.push(data);
+        else {
+          while (index >= 0 && !list[index].children) index--;
+          list[index].children.push(data);
+        }
         setList([...list]);
       } else {
         setList([...list, data]);
