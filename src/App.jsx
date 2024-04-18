@@ -11,6 +11,7 @@ function App() {
   let subsectionCount = 0;
   let subSubsectionCount = 0;
   let tableCount = 0;
+  let figureCount = 0;
 
   const updateNumbering = useCallback(
     (newList = list) => {
@@ -48,6 +49,10 @@ function App() {
               tableCount++;
               return { ...item, number: `${tableCount}` };
 
+            case "figure":
+              figureCount++;
+              return { ...item, number: `${figureCount}` };
+
             default:
               return item;
           }
@@ -67,12 +72,17 @@ function App() {
       data.id = `${item.id}-${Date.now()}`;
       data.key = randomId();
       if (data.type === "table") tableCount++;
-      if (data.type === "text" || data.type === "table") {
+      if (
+        data.type === "text" ||
+        data.type === "table" ||
+        data.type === "figure"
+      ) {
         let index = list.length - 1;
         if (index === -1) list.push(data);
         else {
-          while (index >= 0 && !list[index].children) index--;
-          list[index].children.push(data);
+          while (index > 0 && !list[index].children) index--;
+          if (list[index].children) list[index].children.push(data);
+          else list.splice(list.length - 1, 0, data);
         }
         setList([...list]);
       } else {

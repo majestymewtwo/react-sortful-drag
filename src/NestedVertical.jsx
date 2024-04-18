@@ -4,6 +4,7 @@ import Component from "./components/Component";
 import { useCallback, useEffect, useState } from "react";
 import Table from "./components/Table";
 import { randomId } from "./utils/math";
+import Figure from "./components/Figure";
 
 /* Dropping line Styles */
 const renderDropLineElement = (injectedProps) => (
@@ -160,6 +161,23 @@ export default function NestedVertical({ items, updateList }) {
 
   const renderElement = (item, index, isRoot) => {
     if (!item) return;
+
+    if (item.type === "figure")
+      return (
+        <Figure
+          key={item.key}
+          keyValue={item.key}
+          id={item.id}
+          index={index}
+          number={item.number}
+          caption={item.caption}
+          images={item.images}
+          type={item.type}
+          isInRoot={isRoot}
+          updateContent={handleUpdate}
+          removeElement={handleRemove}
+        />
+      );
 
     if (item.type === "table")
       return (

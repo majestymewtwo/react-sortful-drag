@@ -52,6 +52,14 @@ const dataArray = [
     children: undefined,
   },
   {
+    id: "figure",
+    caption: "",
+    type: "figure",
+    key: "",
+    images: [],
+    children: undefined,
+  },
+  {
     id: "table",
     caption: "",
     rows: 0,
@@ -74,7 +82,11 @@ const data = new Map(dataArray.map((obj) => [obj.id, obj]));
 const Options = ({ addElement }) => {
   const handleAddElement = (type) => {
     const newItem = { ...data.get(type) };
-    if (newItem.type !== "text") {
+    if (
+      newItem.type !== "text" &&
+      newItem.type !== "table" &&
+      newItem.type !== "figure"
+    ) {
       const text = { ...data.get("text") };
       text.id = `${text.id}-${Date.now()}`;
       text.key = randomId();
