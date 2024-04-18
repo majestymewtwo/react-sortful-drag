@@ -171,7 +171,7 @@ const Table = ({
         data: editorView.state.doc.toJSON(),
         type: "table",
         options: newOptions,
-        keyValue: keyValue,
+        key: keyValue,
         children: undefined,
       };
       updateData(data);

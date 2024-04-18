@@ -227,10 +227,6 @@ export default function NestedVertical({ items, updateList }) {
 
   const handleUpdate = useCallback(
     (data) => {
-      // if (data.type === "table") {
-      //   console.log(data);
-      //   return;
-      // }
       let newlist = [...list];
       const mainIndex = newlist.findIndex((val) => val.id === data.id);
       if (mainIndex !== -1) {
