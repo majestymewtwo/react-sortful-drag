@@ -14,11 +14,6 @@ function App() {
 
   const updateNumbering = useCallback(
     (newList = list) => {
-      let sectionCount = 0;
-      let subsectionCount = 0;
-      let subSubsectionCount = 0;
-      let tableCount = 0;
-
       const updateItemNumbers = (items) => {
         return items.map((item) => {
           switch (item.type) {
@@ -54,16 +49,16 @@ function App() {
               return { ...item, number: `${tableCount}` };
 
             default:
-              return item; // For items that do not need special numbering
+              return item;
           }
         });
       };
 
       const updatedList = updateItemNumbers(newList);
       setList([...updatedList]);
-      setUpdated(true); // Assuming you manage a state to track if updates were made
+      setUpdated(true);
     },
-    [list, setUpdated] // `setUpdated` should be included if it's a state setter function used in this context
+    [list, setUpdated]
   );
 
   const handleAddElement = useCallback(
@@ -89,7 +84,8 @@ function App() {
   );
 
   const handleListUpdate = (newList) => {
-    updateNumbering(newList);
+    setUpdated(false);
+    setList(newList);
   };
 
   useEffect(() => {
@@ -98,9 +94,9 @@ function App() {
     }
   }, [list, updated]);
 
-  useEffect(() => {
-    console.log(list);
-  }, [list]);
+  // useEffect(() => {
+  //   console.log(list);
+  // }, [list]);
 
   return (
     <div className='flex gap-2 bg-gray-100 min-h-screen'>
