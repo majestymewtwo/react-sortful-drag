@@ -173,6 +173,7 @@ export default function NestedVertical({ items, updateList }) {
           caption={item.caption}
           images={item.images}
           type={item.type}
+          options={item.options}
           isInRoot={isRoot}
           updateContent={handleUpdate}
           removeElement={handleRemove}

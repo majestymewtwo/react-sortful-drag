@@ -38,11 +38,12 @@ import removeIcon from "../assets/Remove.svg";
 import codeIcon from "../assets/custom.svg";
 import editorIcon from "../assets/Editor.svg";
 import settingsIcon from "../assets/Settings.svg";
-import { debounce } from "lodash";
+import { debounce, set } from "lodash";
 
 import * as Popover from "@radix-ui/react-popover";
 import * as Switch from "@radix-ui/react-switch";
 import * as Slider from "@radix-ui/react-slider";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import ContentEditable from "react-contenteditable";
 
 const schema = new Schema({
@@ -300,6 +301,7 @@ const Table = ({
                     handlePress={executeCommand}
                   />
                   <Settings
+                    id={id}
                     isLong={options.isLong}
                     isWide={options.isWide}
                     number={number}
@@ -369,6 +371,7 @@ const Option = ({ icon, title, invert, utilityFunction, handlePress }) => {
 };
 
 const Settings = ({
+  id,
   isWide,
   number,
   isLong,
@@ -403,6 +406,13 @@ const Settings = ({
     }));
   };
 
+  const handlePositionChange = (e) => {
+    setOptions((prev) => ({
+      ...prev,
+      position: e.target.innerText,
+    }));
+  };
+
   useEffect(() => {
     updateOptions(options);
   }, [options]);
@@ -419,7 +429,7 @@ const Settings = ({
           className='bg-white rounded-sm border shadow relative text-xs space-y-1 w-[20vw]'>
           <h1 className='font-semibold p-2'>Table {number} Settings</h1>
           <hr className='w-full' />
-          <div className='flex justify-between items-center gap-4 p-2'>
+          <div className='flex justify-between items-center gap-4 p-3'>
             <ToggleOption
               title='Wide Table'
               name='isWide'
@@ -437,6 +447,11 @@ const Settings = ({
             isWide={options.isWide}
             width={options.width}
             onSlide={handleSlider}
+          />
+          <PositionMenu
+            id={id}
+            position={options.position}
+            handleChange={handlePositionChange}
           />
         </Popover.Content>
       </Popover.Portal>
@@ -475,7 +490,7 @@ const WidthSlider = ({ width, onSlide, isWide }) => {
   }, [isWide]);
 
   return (
-    <div className='grid grid-cols-12 gap-4 p-2 items-center'>
+    <div className='grid grid-cols-12 gap-4 p-3 items-center'>
       <h1 className='col-span-4'>Table Width</h1>
       <Slider.Root
         onValueChange={updateDisplay}
@@ -490,6 +505,51 @@ const WidthSlider = ({ width, onSlide, isWide }) => {
         <Slider.Thumb className='block size-4 bg-blue-600 rounded-full focus:outline-none' />
       </Slider.Root>
       <h1 className='col-span-1'>{display}</h1>
+    </div>
+  );
+};
+
+const PositionMenu = ({ id, position, handleChange }) => {
+  return (
+    <div className='flex items-center justify-between p-3'>
+      <label htmlFor={`position-${id}`} className='w-1/3'>
+        Table Position
+      </label>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger className='flex items-center justify-end gap-1 w-24 p-1 border text-right focus:outline-none'>
+          <h1>{position}</h1>
+          <img
+            className={`cursor-pointer w-3 h-2`}
+            src='/assets/minimise.png'
+            alt='remove'
+          />
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content className='bg-white border rounded-sm text-xs text-right w-24'>
+            <DropdownMenu.Item
+              onSelect={handleChange}
+              className={`${
+                position === "1" && "bg-gray-200 text-blue-500"
+              } p-1 hover:bg-gray-100 cursor-pointer`}>
+              1
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              onSelect={handleChange}
+              className={`${
+                position === "2" && "bg-gray-200 text-blue-500"
+              } p-1 hover:bg-gray-100 cursor-pointer`}>
+              2
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              onSelect={handleChange}
+              className={`${
+                position === "3" && "bg-gray-200 text-blue-500"
+              } p-1 hover:bg-gray-100 cursor-pointer`}>
+              3
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
     </div>
   );
 };

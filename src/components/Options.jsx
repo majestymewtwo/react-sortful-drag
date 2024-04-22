@@ -58,6 +58,11 @@ const dataArray = [
     key: "",
     images: [],
     children: undefined,
+    options: {
+      isWide: false,
+      width: 0,
+      position: "1",
+    },
   },
   {
     id: "table",
