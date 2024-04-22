@@ -12,6 +12,7 @@ function App() {
   let subSubsectionCount = 0;
   let tableCount = 0;
   let figureCount = 0;
+  let equationCount = 0;
 
   const updateNumbering = useCallback(
     (newList = list) => {
@@ -52,6 +53,9 @@ function App() {
             case "figure":
               figureCount++;
               return { ...item, number: `${figureCount}` };
+            case "equation":
+              equationCount++;
+              return { ...item, number: `${equationCount}` };
 
             default:
               return item;
@@ -75,7 +79,8 @@ function App() {
       if (
         data.type === "text" ||
         data.type === "table" ||
-        data.type === "figure"
+        data.type === "figure" ||
+        data.type === "equation"
       ) {
         let index = list.length - 1;
         if (index === -1) list.push(data);

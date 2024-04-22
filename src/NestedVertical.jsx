@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import Table from "./components/Table";
 import { randomId } from "./utils/math";
 import Figure from "./components/Figure";
+import Equation from "./components/Equation";
 
 /* Dropping line Styles */
 const renderDropLineElement = (injectedProps) => (
@@ -16,13 +17,13 @@ const renderDropLineElement = (injectedProps) => (
 );
 
 const dotsSVG = (
-  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'>
-    <circle cx='18' cy='12' r='3' />
-    <circle cx='18' cy='24' r='3' />
-    <circle cx='18' cy='36' r='3' />
-    <circle cx='30' cy='12' r='3' />
-    <circle cx='30' cy='24' r='3' />
-    <circle cx='30' cy='36' r='3' />
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+    <circle cx="18" cy="12" r="3" />
+    <circle cx="18" cy="24" r="3" />
+    <circle cx="18" cy="36" r="3" />
+    <circle cx="30" cy="12" r="3" />
+    <circle cx="30" cy="24" r="3" />
+    <circle cx="30" cy="36" r="3" />
   </svg>
 );
 
@@ -48,7 +49,7 @@ export default function NestedVertical({ items, updateList }) {
       }
       return (
         <div
-          className='border p-2 rounded-sm flex items-center justify-between max-w-md bg-white/75'
+          className="border p-2 rounded-sm flex items-center justify-between max-w-md bg-white/75"
           dangerouslySetInnerHTML={{ __html: item.text ?? item.caption }}
         />
       );
@@ -65,8 +66,9 @@ export default function NestedVertical({ items, updateList }) {
             width: Math.min(props.style.width, 800),
             height: Math.min(props.style.height, 600),
           }}
-          className='p-3 border border-dashed flex items-center gap-4 max-h-40'>
-          <DragHandleComponent className='size-7'>
+          className="p-3 border border-dashed flex items-center gap-4 max-h-40"
+        >
+          <DragHandleComponent className="size-7">
             {dotsSVG}
           </DragHandleComponent>
         </div>
@@ -78,8 +80,8 @@ export default function NestedVertical({ items, updateList }) {
   const renderStackGroup = useCallback(
     (props) => {
       if (active.isGroup)
-        return <div style={props.style} className='bg-red-50' />;
-      return <div style={props.style} className='bg-green-50' />;
+        return <div style={props.style} className="bg-red-50" />;
+      return <div style={props.style} className="bg-green-50" />;
     },
     [list, active]
   );
@@ -109,7 +111,8 @@ export default function NestedVertical({ items, updateList }) {
         } else {
           item = newList[index];
         }
-        if (item.type === "table") updateItemKey(meta);
+        if (item.type === "table" || item.type === "equation")
+          updateItemKey(meta);
         return;
       }
       if (isGroup && nextGroupIdentifier) {
@@ -161,6 +164,21 @@ export default function NestedVertical({ items, updateList }) {
 
   const renderElement = (item, index, isRoot) => {
     if (!item) return;
+
+    if (item.type === "equation")
+      return (
+        <Equation
+          key={item.key}
+          id={item.id}
+          index={index}
+          keyValue={item.key}
+          number={item.number}
+          isInRoot={isRoot}
+          data={item.data}
+          removeElement={handleRemove}
+          updateData={handleUpdate}
+        />
+      );
 
     if (item.type === "figure")
       return (
@@ -214,7 +232,8 @@ export default function NestedVertical({ items, updateList }) {
           updateContent={handleUpdate}
           isInRoot={isRoot}
           content={item.children}
-          removeElement={handleRemove}>
+          removeElement={handleRemove}
+        >
           {item.children.map((child, index) =>
             renderElement(child, index, false)
           )}
@@ -313,15 +332,16 @@ export default function NestedVertical({ items, updateList }) {
 
   return (
     <List
-      className='w-5/6'
+      className="w-5/6"
       renderGhost={renderGhost}
       renderPlaceholder={renderPlaceholder}
       renderStackedGroup={renderStackGroup}
       onDragEnd={onDragEnd}
       onDragStart={onDragStart}
       isDisabled={false}
-      renderDropLine={renderDropLineElement}>
-      <div className='p-4'>
+      renderDropLine={renderDropLineElement}
+    >
+      <div className="p-4">
         {list.map((item, index) => renderElement(item, index, true))}
       </div>
     </List>

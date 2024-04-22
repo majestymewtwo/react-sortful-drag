@@ -81,6 +81,13 @@ const dataArray = [
       position: "1",
     },
   },
+  {
+    id: "equation",
+    data: "",
+    code: "",
+    type: "equation",
+    children: undefined,
+  },
 ];
 
 const data = new Map(dataArray.map((obj) => [obj.id, obj]));

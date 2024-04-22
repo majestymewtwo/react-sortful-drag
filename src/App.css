@@ -44,3 +44,12 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+math-field {
+  @apply block p-2 focus:outline-none border-2 text-xl;
+}
+
+math-field::part(virtual-keyboard-toggle),
+math-field::part(menu-toggle) {
+  @apply hidden;
+}
