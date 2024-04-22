@@ -81,6 +81,7 @@ const Table = ({
   const editorRef = useRef(null);
   const [editorView, setEditorView] = useState(null);
   const [showEditor, setShowEditor] = useState(true);
+  const [tableOptions, setTableOptions] = useState(options);
   const [tableCaption, setTableCaption] = useState(caption);
   const [close, setClose] = useState(false);
 
@@ -102,7 +103,6 @@ const Table = ({
         )
       )
     );
-
     let docNode;
     if (data) {
       docNode = schema.nodeFromJSON(data);
@@ -125,7 +125,6 @@ const Table = ({
         )
       );
     }
-
     const editorState = EditorState.create({
       doc: docNode,
       plugins: [
@@ -161,7 +160,7 @@ const Table = ({
     [updateData]
   );
 
-  const handleChange = (newOptions = options) => {
+  const handleChange = () => {
     if (editorView) {
       const data = {
         id: id,
@@ -170,8 +169,9 @@ const Table = ({
         caption: tableCaption,
         data: editorView.state.doc.toJSON(),
         type: "table",
-        options: newOptions,
+        options: tableOptions,
         key: keyValue,
+        number : number,
         children: undefined,
       };
       updateData(data);
@@ -179,7 +179,7 @@ const Table = ({
   };
 
   const updateOptions = (options) => {
-    handleChange(options);
+    setTableOptions(options);
   };
 
   const updateCaption = (e) => {
@@ -204,7 +204,7 @@ const Table = ({
 
   useEffect(() => {
     handleChange();
-  }, [tableCaption]);
+  }, [tableCaption, tableOptions]);
 
   return (
     <Item isUsedCustomDragHandlers identifier={id} index={index}>
@@ -218,8 +218,8 @@ const Table = ({
           onMouseLeave={toggleClose}>
           <div className='flex items-center justify-between'>
             <div className='flex gap-6 items-center'>
-              <h1 className='text-black font-semibold'>{`Table ${
-                number ?? ""
+              <h1 className='text-black font-semibold w-20'>{`Table ${
+                number ?? " "
               }`}</h1>
               <Option
                 icon={showEditor ? codeIcon : editorIcon}

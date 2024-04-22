@@ -261,9 +261,9 @@ export default function NestedVertical({ items, updateList }) {
           }
         });
       }
-      updateList(newlist);
+      setList(newlist);
     },
-    [list, updateList]
+    [list]
   );
 
   const handleRemove = useCallback(
