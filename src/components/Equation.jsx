@@ -52,6 +52,7 @@ const Equation = ({
   useEffect(() => {
     if (mf.current) {
       mf.current.setValue(equationData);
+      mf.current.placeholderSymbol = "< />";
       mf.current.mathVirtualKeyboardPolicy = "manual";
     }
   }, [index, showEditor]);
