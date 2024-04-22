@@ -67,6 +67,7 @@ const dataArray = [
     data: undefined,
     type: "table",
     key: "",
+    code: "",
     children: undefined,
     options: {
       isWide: false,

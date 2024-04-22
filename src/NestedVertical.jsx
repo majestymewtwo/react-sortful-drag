@@ -189,9 +189,11 @@ export default function NestedVertical({ items, updateList }) {
           caption={item.caption}
           cols={item.cols}
           rows={item.rows}
+          code={item.code}
           data={item.data}
           number={item.number}
           options={item.options}
+          isInRoot={isRoot}
           updateData={handleUpdate}
           removeElement={handleRemove}
         />

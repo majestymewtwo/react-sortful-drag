@@ -43,6 +43,7 @@ import { debounce } from "lodash";
 import * as Popover from "@radix-ui/react-popover";
 import * as Switch from "@radix-ui/react-switch";
 import * as Slider from "@radix-ui/react-slider";
+import ContentEditable from "react-contenteditable";
 
 const schema = new Schema({
   nodes: baseSchema.spec.nodes.append(
@@ -73,7 +74,9 @@ const Table = ({
   rows,
   cols,
   data,
+  code,
   number,
+  isInRoot,
   options,
   updateData,
   removeElement,
@@ -83,6 +86,7 @@ const Table = ({
   const [showEditor, setShowEditor] = useState(true);
   const [tableOptions, setTableOptions] = useState(options);
   const [tableCaption, setTableCaption] = useState(caption);
+  const [tableCode, setTableCode] = useState(code);
   const [close, setClose] = useState(false);
 
   useEffect(() => {
@@ -171,7 +175,8 @@ const Table = ({
         type: "table",
         options: tableOptions,
         key: keyValue,
-        number : number,
+        number: number,
+        code: tableCode,
         children: undefined,
       };
       updateData(data);
@@ -202,9 +207,13 @@ const Table = ({
     setClose((close) => !close);
   };
 
+  const handleTableCodeChange = (e) => {
+    setTableCode(e.target.value);
+  };
+
   useEffect(() => {
     handleChange();
-  }, [tableCaption, tableOptions]);
+  }, [tableCaption, tableOptions, tableCode]);
 
   return (
     <Item isUsedCustomDragHandlers identifier={id} index={index}>
@@ -213,12 +222,12 @@ const Table = ({
           {dotsSVG}
         </DragHandleComponent>
         <div
-          className='bg-white border p-2 rounded-md w-full'
+          className={`bg-white ${isInRoot && "border"} p-2 rounded-md w-full`}
           onMouseEnter={toggleClose}
           onMouseLeave={toggleClose}>
           <div className='flex items-center justify-between'>
             <div className='flex gap-6 items-center'>
-              <h1 className='text-black font-semibold w-20'>{`Table ${
+              <h1 className='text-black font-semibold'>{`Table ${
                 number ?? " "
               }`}</h1>
               <Option
@@ -226,76 +235,80 @@ const Table = ({
                 title={"Toggle editor"}
                 handlePress={toggleEditor}
               />
-              <Option
-                icon={addRowBeforeIcon}
-                title={"Add Row Before"}
-                utilityFunction={addRowBefore}
-                handlePress={executeCommand}
-              />
-              <Option
-                icon={addRowAfterIcon}
-                title={"Add Row After"}
-                utilityFunction={addRowAfter}
-                handlePress={executeCommand}
-              />
-              <Option
-                icon={addColumnBeforeIcon}
-                title={"Add Col Before"}
-                utilityFunction={addColumnBefore}
-                handlePress={executeCommand}
-              />
-              <Option
-                icon={addColumnAfterIcon}
-                title={"Add Col After"}
-                utilityFunction={addColumnAfter}
-                handlePress={executeCommand}
-              />
-              <Option
-                icon={deleteRowIcon}
-                title={"Delete Row"}
-                utilityFunction={deleteRow}
-                handlePress={executeCommand}
-              />
-              <Option
-                icon={deleteColumnIcon}
-                title={"Delete Col"}
-                utilityFunction={deleteColumn}
-                handlePress={executeCommand}
-              />
-              <Option
-                icon={mergeCellsIcon}
-                title={"Merge Cells"}
-                utilityFunction={mergeCells}
-                handlePress={executeCommand}
-              />
-              <Option
-                icon={splitCellIcon}
-                title={"Split Cells"}
-                utilityFunction={splitCell}
-                handlePress={executeCommand}
-              />
-              <Option
-                icon={undoIcon}
-                title={"Undo"}
-                utilityFunction={undo}
-                invert={true}
-                handlePress={executeCommand}
-              />
-              <Option
-                icon={redoIcon}
-                title={"Redo"}
-                utilityFunction={redo}
-                invert={true}
-                handlePress={executeCommand}
-              />
-              <Settings
-                isLong={options.isLong}
-                isWide={options.isWide}
-                number={number}
-                width={options.width}
-                position={options.position}
-                updateOptions={updateOptions}
-              />
+              {showEditor && (
+                <>
+                  <Option
+                    icon={addRowBeforeIcon}
+                    title={"Add Row Before"}
+                    utilityFunction={addRowBefore}
+                    handlePress={executeCommand}
+                  />
+                  <Option
+                    icon={addRowAfterIcon}
+                    title={"Add Row After"}
+                    utilityFunction={addRowAfter}
+                    handlePress={executeCommand}
+                  />
+                  <Option
+                    icon={addColumnBeforeIcon}
+                    title={"Add Col Before"}
+                    utilityFunction={addColumnBefore}
+                    handlePress={executeCommand}
+                  />
+                  <Option
+                    icon={addColumnAfterIcon}
+                    title={"Add Col After"}
+                    utilityFunction={addColumnAfter}
+                    handlePress={executeCommand}
+                  />
+                  <Option
+                    icon={deleteRowIcon}
+                    title={"Delete Row"}
+                    utilityFunction={deleteRow}
+                    handlePress={executeCommand}
+                  />
+                  <Option
+                    icon={deleteColumnIcon}
+                    title={"Delete Col"}
+                    utilityFunction={deleteColumn}
+                    handlePress={executeCommand}
+                  />
+                  <Option
+                    icon={mergeCellsIcon}
+                    title={"Merge Cells"}
+                    utilityFunction={mergeCells}
+                    handlePress={executeCommand}
+                  />
+                  <Option
+                    icon={splitCellIcon}
+                    title={"Split Cells"}
+                    utilityFunction={splitCell}
+                    handlePress={executeCommand}
+                  />
+                  <Option
+                    icon={undoIcon}
+                    title={"Undo"}
+                    utilityFunction={undo}
+                    invert={true}
+                    handlePress={executeCommand}
+                  />
+                  <Option
+                    icon={redoIcon}
+                    title={"Redo"}
+                    utilityFunction={redo}
+                    invert={true}
+                    handlePress={executeCommand}
+                  />
+                  <Settings
+                    isLong={options.isLong}
+                    isWide={options.isWide}
+                    number={number}
+                    width={options.width}
+                    position={options.position}
+                    updateOptions={updateOptions}
+                  />
+                </>
+              )}
             </div>
             <div>
               {close && (
@@ -309,20 +322,31 @@ const Table = ({
               )}
             </div>
           </div>
-          <input
-            type='text'
-            placeholder='Caption'
-            value={tableCaption}
-            onChange={updateCaption}
-            spellCheck={false}
-            className='text-sm w-full mb-1 p-2 bg-[#f5f5f5a3] outline-none text-black rounded text-justify cursor-text'
-          />
-          <div
-            spellCheck={false}
-            onKeyDown={updateDataDebounced}
-            ref={editorRef}
-            className='editor-content'
-          />
+          {showEditor && (
+            <>
+              <input
+                type='text'
+                placeholder='Caption'
+                value={tableCaption}
+                onChange={updateCaption}
+                spellCheck={false}
+                className='text-sm w-full mb-1 p-2 bg-[#f5f5f5a3] outline-none text-black rounded text-justify cursor-text'
+              />
+              <div
+                spellCheck={false}
+                onKeyDown={updateDataDebounced}
+                ref={editorRef}
+                className='editor-content'
+              />
+            </>
+          )}
+          {!showEditor && (
+            <ContentEditable
+              html={tableCode}
+              onChange={handleTableCodeChange}
+              className='m-2 p-3 border-2 rounded-sm min-h-32 text-sm focus:outline-none bg-gray-100'
+            />
+          )}
         </div>
       </div>
     </Item>
